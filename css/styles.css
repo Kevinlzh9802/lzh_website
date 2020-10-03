@@ -1,0 +1,212 @@
+body {
+  font-size: 16px;
+  font-family: 'Oxygen', sans-serif;
+}
+
+h2 {
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
+/** HEADER **/
+nav.navbar {
+  margin-bottom: 15px;
+}
+
+#nav-profile a:hover, #nav-profile a:focus{
+  background-color: black;
+  transition: 0.3s;
+}
+
+a#email-link {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+a#email-link:hover {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* END HEADER */
+
+
+/* START FOOTER */
+.panel-footer {
+  margin-top: 30px;
+  padding-top: 35px;
+  padding-bottom: 30px;
+  color: #fff;
+  background-color: #343a40;
+  border-top: 0;
+}
+.panel-footer div.row {
+  margin-bottom: 35px;
+}
+#contact, #social-media, #footer-desc {
+  line-height: 2;
+}
+#contact > span, #social-media > span, #footer-desc > span{
+  font-size: 1.3em;
+}
+#footer-desc a {
+  color: yellow;
+  cursor: pointer;
+}
+#footer-desc p {
+  margin-top: 15px;
+}
+
+
+/* END FOOTER */
+
+
+
+
+/* START MAIN PAGE */
+
+
+/* END MAIN PAGE */
+
+
+
+/* START CONTACTME.HTML */
+
+
+/* END CONTACTME.HTML */
+
+
+/* START ABOUT.HTML */
+.card:hover {
+  border: 1px solid rgba(0, 0, 255, 0.4);
+  transition: 0.3s;
+}
+
+.card a {
+  color: black;
+}
+
+.card a:hover, .card a:focus {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.card .card-body {
+  padding: 5px 10px;
+}
+
+/* END ABOUT.HTML */
+
+/* START STRING GENERATOR.HTML */
+.form-check:nth-child(1) {
+  margin-top: 15px;
+}
+
+.form-check:last-child {
+  margin-bottom: 25px;
+}
+
+.form-check {
+  margin: 10px auto;
+}
+
+.selection input {
+  margin-top: 15px;
+}
+
+.selection {
+  margin-bottom: 40px;
+}
+
+
+
+
+
+
+
+/* END STRING GENERATOR.HTML */
+
+/* Media Queries */
+/********** Large devices only **********/
+@media (min-width: 1200px) {
+
+  #nav-list a.level1 {
+    margin-top: 15px;
+  }
+}
+
+/********** Medium devices only **********/
+@media (min-width: 992px) and (max-width: 1199px) {
+  /* Header */
+
+  #nav-list a.level1 {
+    margin-top: 15px;
+  }
+  /* End Header */
+
+  /* Home Page */
+  .container .jumbotron {
+    background: url('../images/jumbotron_992.jpg') no-repeat;
+    height: 558px;
+  }
+  /* End Home Page */
+}
+
+/********** Small devices only **********/
+@media (min-width: 768px) and (max-width: 991px) {
+  /* Home Page */
+
+  body {
+    font-size: 14px;
+  }
+  
+  .navbar-brand {
+    padding-top: 15px;
+  }
+  .navbar-brand h1 {
+    font-size: 1.5em;
+  }
+  .container .jumbotron {
+    background: url('../images/jumbotron_768.jpg') no-repeat;
+    height: 432px;
+  }
+
+  /* End Home Page */
+}
+
+/********** Extra small devices only **********/
+@media (max-width: 767px) {
+  body {
+    font-size: 14px;
+  }
+  /* Header */
+  .navbar-brand {
+    padding-top: 10px;
+  }
+  .navbar-brand h1 { /* Restaurant name */
+    padding-top: 5px;
+    font-size: 1.4em; /* 1vw = 1% of viewport width */
+    margin: auto;
+  }
+
+  #collapsable-nav a { /* Collapsed nav menu text */
+    font-size: 2vw;
+  }
+  #collapsable-nav a span { /* Collapsed nav menu glyph */
+    font-size: 1em;
+    margin-right: 5px;
+  }
+
+  footer.panel-footer {
+    padding-left: 0;
+    padding-right: 0;
+  }
+ 
+}
+
+
+/********** Super extra small devices Only :-) (e.g., iPhone 4) **********/
+@media (max-width: 479px) {
+
+}
+
+

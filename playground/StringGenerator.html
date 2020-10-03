@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/bootstrap.css">
+  <link rel="stylesheet" href="../css/styles.css">
+  <title>密码生成</title>
+</head>
+<body>
+  <header>
+    <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="../index.html">
+          <img src="https://getbootstrap.com/docs/4.5/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
+        </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-toggle" aria-controls="navbar-toggle" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbar-toggle">
+          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="../index.html">首页<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                个人信息
+              </a>
+              <div id="nav-profile" class="dropdown-menu bg-dark " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item text-white" href="#">个人经历</a>
+                <a class="dropdown-item text-white" href="#">兴趣爱好</a>
+                <a class="dropdown-item text-white" href="../profile/ContactMe.html">联系方式</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item text-white" href="#">Something else here</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../archive/archive.html">归档</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../playground/playground.html">广场</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../about/about.html">关于</a>
+            </li>
+          </ul>
+          <a href="mailto:zonghuan_li@outlook.com" id="email-link" class="mr-sm-2">
+            zonghuan_li@outlook.com
+          </a>
+        </div>
+      </div>
+    </nav>
+	</header>
+
+	<div class="container">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="../index.html">首页</a></li>
+      <li class="breadcrumb-item"><a href="playground.html">广场</a></li>
+      <li class="breadcrumb-item active" aria-current="page">密码生成</li>
+    </ol>
+	</div>
+
+	<div id="main-content" class="container">
+    <h2>密码生成</h2>
+    <form action="javascript:;" id="stringGeneratorForm" target=""></form>
+		<div class="row">
+      <div class="col-lg-6">
+        <h3>字符范围</h3>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="upperCaseEligible" value="" id="upperCaseLetter" form="stringGeneratorForm" checked>
+          <label class="form-check-label" for="upperCaseLetter">大写字母</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="lowerCaseEligible" value="" id="lowerCaseLetter" form="stringGeneratorForm" checked>
+          <label class="form-check-label" for="lowerCaseLetter">小写字母</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="numbersEligible" value="" id="numbers" form="stringGeneratorForm">
+          <label class="form-check-label" for="numbers">数字</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="otherCharsEligible" value="" id="otherCharacters" form="stringGeneratorForm">
+          <label class="form-check-label" for="otherCharacters">其他符号</label>
+          <div class="invalid-feedback">请为密码选择至少一个字符集！</div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <h3>首字符范围</h3>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="upperCaseEligible1" value="" id="upperCaseLetter1" form="stringGeneratorForm" checked>
+          <label class="form-check-label" for="upperCaseLetter1">大写字母</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="lowerCaseEligible1" value="" id="lowerCaseLetter1" form="stringGeneratorForm" checked>
+          <label class="form-check-label" for="lowerCaseLetter1">小写字母</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="numbersEligible1" value="" id="numbers1" form="stringGeneratorForm" disabled>
+          <label class="form-check-label" for="numbers1">数字</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="otherCharsEligible1" value="" id="otherCharacters1" form="stringGeneratorForm" disabled>
+          <label class="form-check-label" for="otherCharacters1">其他符号</label>
+          <div class="invalid-feedback">请为密码首字符选择至少一个字符集！</div>
+        </div>
+      </div>
+
+			<div class="col-lg-12">
+				<h3>生成方式</h3>
+      </div>
+
+			<div class="selection col-lg-6">
+				<div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="lengthOption" id="fixedLength" value="" form="stringGeneratorForm" checked>
+          <label class="form-check-label" for="fixedLength">固定长度</label>    
+        </div>
+        <div class="form-row">
+          <label class="form-check-label col-lg-12" for="setFixedLength">长度(1-30)：</label>
+          <div class="col-6">
+            <input type="number" class="form-control" name="nameSetFixedLength" id="setFixedLength" value="1" form="stringGeneratorForm" placeholder="1-30" min="1" max="30" required>
+            <div class="invalid-feedback">请输入1-30之间的整数</div>
+          </div>
+        </div>
+			</div>
+			<div class="selection col-lg-6">
+				<div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="lengthOption" id="randomLength" value="" form="stringGeneratorForm">
+          <label class="form-check-label" for="randomLength">随机长度</label>
+        </div>
+        <div class="form-row">
+          <label class="form-check-label col-lg-5 col-md-5 col-sm-5 col-5" for="randomMinLength">最小长度(1-30)：</label>
+          <label class="form-check-label col-lg-5 col-md-5 col-sm-5 col-5" for="randomMaxLength">最大长度(1-30)：</label>
+        </div>
+        <div class="form-row">
+          <div class="col-5">
+            <input type="number" class="form-control" name="nameRandomMinLength" id="randomMinLength" value="1" form="stringGeneratorForm" placeholder="1-30" min="1" max="30" disabled required>
+            <div class="invalid-feedback">请输入1-30之间的整数，且最大长度应大于等于最小长度</div>
+          </div>
+          <div class="col-5">
+            <input type="number" class="form-control" name="nameRandomMaxLength" id="randomMaxLength" value="1" form="stringGeneratorForm" placeholder="1-30" min="1" max="30" disabled required>
+            <div class="invalid-feedback">请输入1-30之间的整数，且最大长度应大于等于最小长度</div>
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="col-lg-3">
+        <div class="form-group">
+          <label for="generateAmount">一次生成数量(1-50)：</label>
+          <input type="number" class="form-control" name="nameGenerateAmount" id="generateAmount" form="stringGeneratorForm" value="1" placeholder="1" min="1" max="50" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" id="generateButton" form="stringGeneratorForm">生成</button>
+        <button type="button" class="btn btn-secondary btn-lg" id="copyAll">复制内容</button>
+      </div>
+      
+      <div class="col-lg-7 offset-lg-1">
+        <div class="form-group">
+          <label for="generateResult">生成结果</label>
+          <textarea class="form-control" id="generateResult" rows="10" readonly></textarea>
+        </div>
+      </div>
+		</div>
+	</div>
+	
+	<footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="contact" class="col-sm-4">
+          <span>联系方式</span><br>
+          手机号（中国大陆）：xxxxxxxx<br>
+          手机号（国际）：xxxxxxxx<br>
+					Email（个人）：zonghuan_li@outlook.com<br>
+					Email（工作）：xxxxxxxx@xxxx.com
+          <hr class="visible-xs">
+        </section>
+        <section id="social-media" class="col-sm-4">
+          <span>社交媒体</span><br>
+          微信：xxxxxxxx<br>
+					领英：xxxxxxxx<br>
+					Twitter: xxxxxxxx<br>
+					Facebook: xxxxxxxx<br>
+          <hr class="visible-xs">
+        </section>
+        <section id="footer-desc" class="col-sm-4">
+          <span>说明</span><br>
+						<p>在联系我之前，建议先访问<a href="../profile/ContactMe.html">联系方式</a>页面。</p>
+						<p>查看我的网站的<a href="../about/about.html">说明</a>。</p>
+          <hr class="visible-xs">
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Zonghuan li 2020</div>
+    </div>
+  </footer>
+
+	<script src="../js/jquery-1.11.3.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/string-generate.js"></script>
+  <!-- <script src="../js/ajax-utils.js"></script>
+  <script src="../js/script.js"></script> -->
+</body>
+</html>
