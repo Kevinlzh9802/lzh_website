@@ -2,10 +2,3 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/s32cavug58jx/public_html/
-    - /bin/cp -R about $DEPLOYPATH
-    - /bin/cp -R archive $DEPLOYPATH
-    - /bin/cp -R assets $DEPLOYPATH
-    - /bin/cp -R playground $DEPLOYPATH
-    - /bin/cp -R profile $DEPLOYPATH
-    - /bin/cp index.html $DEPLOYPATH
-    - /bin/cp 404.shtml $DEPLOYPATH
