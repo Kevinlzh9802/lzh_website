@@ -11,13 +11,13 @@ const put = (game, index, owner, count) => {
   game.board[index] = { owner, count };
 };
 
-test('starts on a 10-column, 5-row board with opposite corners and red to move', () => {
+test('starts on an 8-column, 4-row board with opposite corners and red to move', () => {
   const game = createGame();
-  assert.equal(game.columns, 10);
-  assert.equal(game.rows, 5);
-  assert.equal(game.board.length, 50);
+  assert.equal(game.columns, 8);
+  assert.equal(game.rows, 4);
+  assert.equal(game.board.length, 32);
   assert.deepEqual(game.board[0], { owner: 'red', count: 1 });
-  assert.deepEqual(game.board[49], { owner: 'blue', count: 1 });
+  assert.deepEqual(game.board[31], { owner: 'blue', count: 1 });
   assert.deepEqual(countBubbles(game.board), { red: 1, blue: 1 });
   assert.equal(game.turn, 'red');
   assert.equal(game.winner, null);
@@ -27,7 +27,7 @@ test('starts on a 10-column, 5-row board with opposite corners and red to move',
 test('rejects empty cells, enemy cells and out-of-board moves without mutation', () => {
   const game = createGame();
   const before = structuredClone(game);
-  for (const index of [1, 49, -1, 50, 1.5, NaN]) assert.throws(() => playMove(game, index));
+  for (const index of [1, 31, -1, 32, 1.5, NaN]) assert.throws(() => playMove(game, index));
   assert.deepEqual(game, before);
 });
 
@@ -40,7 +40,7 @@ test('increments an owned cell, switches turns once and leaves its input unchang
   assert.equal(result.game.turn, 'blue');
   assert.equal(result.game.moves, 1);
   assert.equal(result.explosions, 0);
-  assert.equal(playMove(result.game, 49).game.turn, 'red');
+  assert.equal(playMove(result.game, 31).game.turn, 'red');
 });
 
 test('corners, edges and interior cells all explode at four, with only orthogonal neighbors', () => {

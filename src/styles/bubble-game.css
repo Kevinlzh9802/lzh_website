@@ -125,9 +125,9 @@
 }
 .battle-board {
   display: grid;
-  grid-template-columns: repeat(10, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--board-columns, 8), minmax(0, 1fr));
   gap: 5px;
-  min-width: 480px;
+  min-width: 384px;
 }
 .battle-cell {
   position: relative;

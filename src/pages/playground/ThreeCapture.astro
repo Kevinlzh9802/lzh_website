@@ -1,0 +1,332 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeading from '../../components/PageHeading.astro';
+import Icon from '../../components/Icon.astro';
+import { createCaptureGame } from '../../lib/three-capture.mjs';
+import '../../styles/bubble-game.css';
+import '../../styles/three-capture.css';
+const initial = createCaptureGame();
+---
+
+<Layout
+  title="三子吃棋"
+  active="playground"
+  description="4 × 4 本地双人棋类游戏。移动相邻棋子，以两枚己方棋子和一枚位于端点的敌方棋子连成三子，吃掉对手。"
+>
+  <PageHeading
+    title="三子吃棋"
+    english="THREE IN A LINE / 03"
+    parent="广场"
+    description="挪动一步，连成三子。"
+  />
+  <section class="wrap page-content bubble-game capture-game" aria-label="三子吃棋游戏">
+    <noscript>
+      <p class="noscript-note">请启用 JavaScript 以开始三子吃棋。</p>
+    </noscript>
+    <div class="battle-toolbar">
+      <div class="battle-mode">
+        <span class="status-dot"></span>本地双人 <span class="battle-divider">/</span> 4 列 × 4 行
+      </div>
+      <button id="capture-restart" class="battle-reset" type="button">
+        重新开始 <span aria-hidden="true">↻</span>
+      </button>
+    </div>
+    <div class="battle-arena capture-arena" data-turn="red" id="capture-arena">
+      <div class="battle-topbar">
+        <div class="player-score player-red">
+          <span class="player-symbol" aria-hidden="true">
+            ●
+          </span>
+          <div>
+            <span class="player-name">
+              红方 <span id="capture-red-current">当前回合</span>
+            </span>
+            <strong id="capture-red-score">6</strong>
+            <small>枚棋子</small>
+          </div>
+        </div>
+        <div class="battle-turn">
+          <span class="eyebrow" id="capture-move-number">
+            TURN 01
+          </span>
+          <h2 id="capture-turn-title">轮到红方</h2>
+          <p id="capture-turn-hint">先选择棋子，再选择相邻空格</p>
+        </div>
+        <div class="player-score player-blue">
+          <span class="player-symbol" aria-hidden="true">
+            ◆
+          </span>
+          <div>
+            <span class="player-name">
+              蓝方{' '}
+              <span id="capture-blue-current" hidden>
+                当前回合
+              </span>
+            </span>
+            <strong id="capture-blue-score">6</strong>
+            <small>枚棋子</small>
+          </div>
+        </div>
+      </div>
+      <div class="capture-layout">
+        <div
+          class="capture-board"
+          id="capture-board"
+          role="group"
+          aria-label="4 列 4 行棋盘，方向键移动，回车或空格选择棋子及目标，Escape 取消选择"
+        >
+          {initial.board.map((owner, index) => (
+            <button
+              type="button"
+              class="capture-cell"
+              data-index={index}
+              data-owner={owner ?? 'empty'}
+              tabindex={index === 0 ? 0 : -1}
+              aria-disabled={owner !== 'red' ? 'true' : 'false'}
+              aria-label={`第 ${Math.floor(index / 4) + 1} 行，第 ${(index % 4) + 1} 列，${owner === 'red' ? '红方棋子，可选择' : owner === 'blue' ? '蓝方棋子' : '空格'}`}
+            >
+              <span class="capture-piece" aria-hidden="true"></span>
+              <span class="capture-target" aria-hidden="true"></span>
+            </button>
+          ))}
+        </div>
+        <aside class="capture-guide" aria-label="吃子提示">
+          <span class="eyebrow">MAKE YOUR MOVE</span>
+          <h3>连成三子，吃掉端点。</h3>
+          <p>
+            移动后，目标格所在的整行或整列必须恰好有 3 枚连续棋子：己方 2 枚，敌方 1
+            枚，敌方在端点。
+          </p>
+          <div class="capture-pattern" aria-label="己方、己方、敌方、空格：可以吃子">
+            <span data-owner="red">我</span>
+            <span data-owner="red">我</span>
+            <span data-owner="blue">敌</span>
+            <span class="pattern-empty">·</span>
+          </div>
+          <p class="capture-example-note">或「敌・我・我」，也可以在列上组成。</p>
+          <div class="capture-guide-bottom">
+            <p>
+              <b>先选棋子</b>
+              <br />
+              再点击高亮的相邻空格。
+            </p>
+            <p>
+              <b>双向判断</b>
+              <br />
+              行、列同时满足时，一次吃掉 2 枚。
+            </p>
+            <p>
+              <b>获胜</b>
+              <br />
+              吃光对方棋子，或令对方无棋可走。
+            </p>
+          </div>
+        </aside>
+      </div>
+      <div class="battle-bottom">
+        <span>
+          <kbd>↑ ↓ ← →</kbd> 移动 <kbd>Enter</kbd> 选择 <kbd>Esc</kbd> 取消
+        </span>
+        <span>一步一格 · 上下左右 · 不能跳子</span>
+      </div>
+    </div>
+    <p
+      id="capture-message"
+      class="battle-message"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      红方先手。先选择一枚红方棋子，再选择相邻的空格。
+    </p>
+    <div id="capture-victory" class="battle-victory" hidden>
+      <span class="eyebrow">A LITTLE MOVE. A CLEVER CAPTURE.</span>
+      <h2 id="capture-winner-title"></h2>
+      <p id="capture-winner-summary"></p>
+      <button id="capture-play-again" class="button" type="button">
+        再来一局 <Icon size={17} />
+      </button>
+    </div>
+    <details class="battle-rules">
+      <summary>
+        怎么玩{' '}
+        <span>
+          完整规则 <Icon name="plus" size={16} />
+        </span>
+      </summary>
+      <div class="battle-rules-content">
+        <ol>
+          <li>棋盘为 4 × 4。外圈上半部 6 枚红棋、下半部 6 枚蓝棋，中间 4 格为空，红方先手。</li>
+          <li>
+            双方轮流行动，每次将一枚己方棋子移动到上下左右相邻的空格。不能斜走、跳子或直接走到有棋子的格子。
+          </li>
+          <li>记棋子进入的格子为 X。只检查移动后 X 所在的整行和整列。</li>
+          <li>
+            某一行或列恰好有 3 枚棋子，3 枚相互连续，且为己方 2 枚、敌方 1 枚，敌方位于这 3
+            枚棋子的一端时，移除该敌方棋子。
+          </li>
+          <li>
+            行与列分别按照吃子前的同一棋盘判断，可以同时移除 1 或 2
+            枚敌方棋子；不会继续连锁吃子。整行或整列有 4 枚棋子时，不触发吃子。
+          </li>
+          <li>消灭对方所有棋子获胜。若轮到对方行动时，对方没有合法走法，对方判负。</li>
+        </ol>
+      </div>
+    </details>
+  </section>
+</Layout>
+<script>
+  import {
+    createCaptureGame,
+    legalDestinations,
+    countPieces,
+    movePiece,
+  } from '../../lib/three-capture.mjs';
+  import type { Player } from '../../lib/three-capture.mjs';
+
+  const board = document.querySelector<HTMLElement>('#capture-board')!;
+  const cells = [...board.querySelectorAll<HTMLButtonElement>('.capture-cell')];
+  const arena = document.querySelector<HTMLElement>('#capture-arena')!;
+  const message = document.querySelector<HTMLElement>('#capture-message')!;
+  const victory = document.querySelector<HTMLElement>('#capture-victory')!;
+  const names = { red: '红方', blue: '蓝方' };
+  let game = createCaptureGame();
+  let selected: number | null = null;
+  let focusIndex = 0;
+  let captured: number[] = [];
+  let lastDestination: number | null = null;
+
+  function render() {
+    const destinations = selected === null ? [] : legalDestinations(game, selected);
+    for (const [index, cell] of cells.entries()) {
+      const owner = game.board[index];
+      const selectable = !game.winner && (owner === game.turn || destinations.includes(index));
+      cell.dataset.owner = owner ?? 'empty';
+      cell.classList.toggle('is-selected', index === selected);
+      cell.classList.toggle('is-destination', destinations.includes(index));
+      cell.classList.toggle('was-captured', captured.includes(index));
+      cell.classList.toggle('was-moved', index === lastDestination);
+      cell.setAttribute('aria-disabled', String(!selectable));
+      cell.setAttribute(
+        'aria-label',
+        `第 ${Math.floor(index / 4) + 1} 行，第 ${(index % 4) + 1} 列，${owner ? `${names[owner]}棋子` : '空格'}${index === selected ? '，已选中' : destinations.includes(index) ? '，可移入' : selectable ? '，可选择' : ''}`,
+      );
+    }
+    const totals = countPieces(game.board);
+    for (const player of ['red', 'blue'] as Player[]) {
+      document.querySelector(`#capture-${player}-score`)!.textContent = String(totals[player]);
+      document.querySelector<HTMLElement>(`#capture-${player}-current`)!.hidden =
+        Boolean(game.winner) || game.turn !== player;
+    }
+    arena.dataset.turn = game.turn;
+    document.querySelector('#capture-move-number')!.textContent =
+      `TURN ${String(game.moves + (game.winner ? 0 : 1)).padStart(2, '0')}`;
+    document.querySelector('#capture-turn-title')!.textContent = game.winner
+      ? `${names[game.winner]}获胜！`
+      : `轮到${names[game.turn]}`;
+    document.querySelector('#capture-turn-hint')!.textContent = game.winner
+      ? '本局已结束'
+      : selected === null
+        ? '先选择棋子，再选择相邻空格'
+        : '选择高亮空格，或重新选择棋子';
+    victory.hidden = !game.winner;
+    if (game.winner) {
+      victory.dataset.winner = game.winner;
+      document.querySelector('#capture-winner-title')!.textContent = `${names[game.winner]}获胜！`;
+      document.querySelector('#capture-winner-summary')!.textContent =
+        `${game.moves} 次移动后，${game.reason === 'blocked' ? '对方已无合法走法。' : '对方所有棋子已被消灭。'}`;
+    }
+  }
+
+  function choose(index: number) {
+    if (game.winner) return;
+    message.classList.remove('is-error');
+    if (game.board[index] === game.turn) {
+      selected = selected === index ? null : index;
+      const destinations = selected === null ? [] : legalDestinations(game, selected);
+      message.textContent =
+        selected === null
+          ? '已取消选择。请选择己方棋子。'
+          : destinations.length
+            ? '棋子已选中。请选择高亮的相邻空格。'
+            : '这枚棋子没有相邻空格，请选择另一枚己方棋子。';
+      render();
+      return;
+    }
+    if (selected !== null && game.board[index] === null) {
+      try {
+        const player = game.turn;
+        const result = movePiece(game, selected, index);
+        game = result.game;
+        captured = result.captured;
+        lastDestination = index;
+        selected = null;
+        message.textContent = game.winner
+          ? `${names[player]}获胜！${game.reason === 'blocked' ? '对方无棋可走。' : '对方棋子已全部被消灭。'}`
+          : `${names[player]}移动完成${captured.length ? `，吃掉 ${captured.length} 枚敌方棋子` : ''}。现在轮到${names[game.turn]}。`;
+        render();
+        return;
+      } catch (error) {
+        message.textContent = error instanceof Error ? error.message : '请选择相邻的空格。';
+      }
+    } else {
+      message.textContent = '先选择己方棋子，再选择高亮的相邻空格。';
+    }
+    message.classList.add('is-error');
+  }
+
+  function restart() {
+    game = createCaptureGame();
+    selected = null;
+    captured = [];
+    lastDestination = null;
+    cells[focusIndex].tabIndex = -1;
+    focusIndex = 0;
+    cells[0].tabIndex = 0;
+    message.classList.remove('is-error');
+    message.textContent = '红方先手。先选择一枚红方棋子，再选择相邻的空格。';
+    render();
+  }
+
+  board.addEventListener('click', (event) => {
+    const cell =
+      event.target instanceof Element
+        ? event.target.closest<HTMLButtonElement>('.capture-cell')
+        : null;
+    if (!cell) return;
+    cells[focusIndex].tabIndex = -1;
+    focusIndex = Number(cell.dataset.index);
+    cell.tabIndex = 0;
+    choose(focusIndex);
+  });
+  board.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      selected = null;
+      render();
+      message.textContent = '已取消选择。请选择己方棋子。';
+      return;
+    }
+    const delta: Record<string, number> = {
+      ArrowUp: -4,
+      ArrowDown: 4,
+      ArrowLeft: -1,
+      ArrowRight: 1,
+    };
+    if (!(event.key in delta)) return;
+    event.preventDefault();
+    const column = focusIndex % 4;
+    if ((event.key === 'ArrowLeft' && column === 0) || (event.key === 'ArrowRight' && column === 3))
+      return;
+    const next = focusIndex + delta[event.key];
+    if (next < 0 || next >= 16) return;
+    cells[focusIndex].tabIndex = -1;
+    focusIndex = next;
+    cells[next].tabIndex = 0;
+    cells[next].focus();
+  });
+  document.querySelector('#capture-restart')!.addEventListener('click', restart);
+  document.querySelector('#capture-play-again')!.addEventListener('click', () => {
+    restart();
+    cells[0].focus();
+  });
+</script>

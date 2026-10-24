@@ -13,6 +13,7 @@ export const links = {
   playground: '/playground/playground.html',
   generator: '/playground/StringGenerator.html',
   bubbles: '/playground/BubbleBattle.html',
+  capture: '/playground/ThreeCapture.html',
   football: '/playground/FootballPage.html',
   about: '/about/about.html',
 };

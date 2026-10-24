@@ -7,7 +7,7 @@
 const copyBoard = (board) => board.map((cell) => ({ ...cell }));
 
 /** @param {number} [columns] @param {number} [rows] @returns {Game} */
-export function createGame(columns = 10, rows = 5) {
+export function createGame(columns = 8, rows = 4) {
   if (!Number.isInteger(columns) || !Number.isInteger(rows) || columns < 2 || rows < 2)
     throw new Error('棋盘至少需要 2 列、2 行。');
   /** @type {Cell[]} */
