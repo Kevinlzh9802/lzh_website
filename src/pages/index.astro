@@ -1,0 +1,128 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import { links } from '../data/site';
+const entries = [
+  {
+    n: '01',
+    title: '个人信息',
+    en: 'ABOUT ME',
+    text: '个人经历、兴趣爱好与联系方式。',
+    href: links.profile,
+  },
+  { n: '02', title: '归档', en: 'ARCHIVE', text: '留一个位置，慢慢整理。', href: links.archive },
+  {
+    n: '03',
+    title: '广场',
+    en: 'PLAYGROUND',
+    text: '一些小工具，一些有趣的尝试。',
+    href: links.playground,
+  },
+];
+---
+
+<Layout active="home">
+  <section class="hero wrap" id="top">
+    <div class="hero-copy">
+      <p class="eyebrow">
+        <span class="status-dot"></span> WELCOME TO MY LITTLE CORNER
+      </p>
+      <h1>
+        <span class="hero-greeting">你好，我是</span>
+        <br />
+        Zonghuan <em>Li.</em>
+      </h1>
+      <p class="hero-description">
+        欢迎来到我的个人网站。
+        <br />
+        这里有关于我的信息，也有一些小小的尝试。
+      </p>
+      <a class="button" href={links.playground}>
+        去广场看看 <Icon size={18} />
+      </a>
+      <a class="text-link hero-secondary" href={links.contact}>
+        与我联系 <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="art-top">
+        <span>PERSONAL SPACE</span>
+        <span>NO. 001</span>
+      </div>
+      <div class="orbit orbit-one"></div>
+      <div class="orbit orbit-two"></div>
+      <div class="orbit orbit-three"></div>
+      <span class="orbit-dot"></span>
+      <span class="art-cross">＋</span>
+      <span class="art-monogram">
+        zl<span>·</span>
+      </span>
+      <span class="art-side">A SMALL PLACE ON THE INTERNET</span>
+      <div class="art-bottom">
+        <span>EST. 2020</span>
+        <span>持续探索中 ↗</span>
+      </div>
+    </div>
+  </section>
+  <div class="notice wrap">
+    <span>
+      <span class="status-dot"></span>网站正在建设中！
+    </span>
+    <span class="notice-aside">慢慢搭建，保持好奇。</span>
+  </div>
+  <section class="explore wrap" aria-labelledby="explore-title">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">EXPLORE</p>
+        <h2 id="explore-title">
+          从这里开始<span class="heading-dot">.</span>
+        </h2>
+      </div>
+      <span class="section-caption">关于我，以及这个小站。</span>
+    </div>
+    <div class="entry-list">
+      {entries.map((entry) => (
+        <a class="entry" href={entry.href}>
+          <span class="entry-number">{entry.n}</span>
+          <div class="entry-title">
+            <h3>{entry.title}</h3>
+            <span>{entry.en}</span>
+          </div>
+          <p>{entry.text}</p>
+          <span class="entry-arrow">
+            <Icon />
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+  <section class="featured wrap" aria-labelledby="featured-title">
+    <div class="featured-copy">
+      <span class="eyebrow">A LITTLE EXPERIMENT</span>
+      <h2 id="featured-title">
+        实用的小工具，
+        <br />
+        也可以很简单。
+      </h2>
+      <p>自定义字符范围与长度，生成你需要的密码。</p>
+      <a class="text-link" href={links.generator}>
+        打开密码生成器 <Icon size={17} />
+      </a>
+    </div>
+    <a href={links.generator} class="generator-preview" aria-label="打开密码生成器">
+      <div class="preview-top">
+        <span>
+          <Icon name="code" size={18} /> STRING GENERATOR
+        </span>
+        <Icon size={18} />
+      </div>
+      <div class="preview-string" aria-hidden="true">
+        Aa<span>7</span>#<span>k</span>Q<span>9</span>m
+      </div>
+      <div class="preview-bottom">
+        <span>字符 · 长度 · 数量</span>
+        <span class="pill">在浏览器中运行</span>
+      </div>
+    </a>
+  </section>
+</Layout>

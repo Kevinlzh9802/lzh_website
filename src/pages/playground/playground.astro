@@ -1,0 +1,64 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeading from '../../components/PageHeading.astro';
+import Icon from '../../components/Icon.astro';
+import { links } from '../../data/site';
+import '../../styles/bubble-game.css';
+---
+
+<Layout title="广场" active="playground">
+  <PageHeading title="广场" english="THE PLAYGROUND" description="一些小工具，一些有趣的尝试。" />
+  <section class="wrap page-content">
+    <div class="small-notice">
+      <span class="status-dot"></span>网站正在建设中！
+    </div>
+    <div class="project-grid">
+      <a class="project project-generator" href={links.generator}>
+        <div class="project-top">
+          <span class="eyebrow">01 / TOOL</span>
+          <Icon />
+        </div>
+        <div class="project-graphic password-graphic" aria-hidden="true">
+          Aa<span>#</span>7
+        </div>
+        <span class="pill">可以使用</span>
+        <h2>密码生成</h2>
+        <p>自定义字符范围、首字符和生成方式。</p>
+      </a>
+      <a class="project project-bubbles" href={links.bubbles}>
+        <div class="project-top">
+          <span class="eyebrow">02 / GAME</span>
+          <Icon />
+        </div>
+        <div class="project-graphic bubble-graphic" aria-hidden="true">
+          <span class="bubble-cluster cluster-red">
+            <i></i>
+            <i></i>
+            <i></i>
+          </span>
+          <span class="bubble-versus">×</span>
+          <span class="bubble-cluster cluster-blue">
+            <i></i>
+            <i></i>
+            <i></i>
+          </span>
+        </div>
+        <span class="pill">本地双人</span>
+        <h2>冒泡大战</h2>
+        <p>一颗泡泡，引发一场连锁反应。红蓝双方轮流对战。</p>
+      </a>
+      <a class="project project-football" href={links.football}>
+        <div class="project-top">
+          <span class="eyebrow">03 / EXPLORATION</span>
+          <Icon />
+        </div>
+        <div class="project-graphic football-graphic" aria-hidden="true">
+          <Icon name="ball" size={108} />
+        </div>
+        <span class="pill">建设中</span>
+        <h2>Football something</h2>
+        <p>关于足球的一角，等待慢慢填满。</p>
+      </a>
+    </div>
+  </section>
+</Layout>

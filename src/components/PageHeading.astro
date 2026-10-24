@@ -1,0 +1,30 @@
+---
+import { links } from '../data/site';
+interface Props {
+  title: string;
+  english: string;
+  description?: string;
+  parent?: string;
+}
+const { title, english, description, parent } = Astro.props;
+---
+
+<div class="page-heading wrap" id="top">
+  <nav class="breadcrumb" aria-label="面包屑">
+    <a href={links.home}>首页</a>
+    <span>/</span>
+    {parent && (
+      <>
+        <a href={links.playground}>{parent}</a>
+        <span>/</span>
+      </>
+    )}
+    <span aria-current="page">{title}</span>
+  </nav>
+  <span class="eyebrow">{english}</span>
+  <h1>
+    {title}
+    <span class="heading-dot">.</span>
+  </h1>
+  {description && <p class="page-description">{description}</p>}
+</div>

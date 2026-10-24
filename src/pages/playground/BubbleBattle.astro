@@ -1,0 +1,317 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeading from '../../components/PageHeading.astro';
+import Icon from '../../components/Icon.astro';
+import { createGame } from '../../lib/bubble-game.mjs';
+import '../../styles/bubble-game.css';
+const initial = createGame();
+---
+
+<Layout
+  title="冒泡大战"
+  active="playground"
+  description="红蓝双人冒泡大战。在 10 列 × 5 行棋盘上增加泡泡，触发爆炸、占领与连锁反应。"
+>
+  <PageHeading
+    title="冒泡大战"
+    english="BUBBLE BATTLE / 02"
+    parent="广场"
+    description="一颗泡泡，引发一场连锁反应。"
+  />
+  <section class="wrap page-content bubble-game" aria-label="冒泡大战游戏">
+    <noscript>
+      <p class="noscript-note">请启用 JavaScript 以开始冒泡大战。</p>
+    </noscript>
+    <div class="battle-toolbar">
+      <div class="battle-mode">
+        <span class="status-dot"></span>本地双人 <span class="battle-divider">/</span> 10 列 × 5 行
+      </div>
+      <button id="restart-game" class="battle-reset" type="button">
+        重新开始 <span aria-hidden="true">↻</span>
+      </button>
+    </div>
+    <div class="battle-arena" data-turn="red" id="battle-arena">
+      <div class="battle-topbar">
+        <div class="player-score player-red" id="red-player">
+          <span class="player-symbol" aria-hidden="true">
+            ●
+          </span>
+          <div>
+            <span class="player-name">
+              红方 <span id="red-current">当前回合</span>
+            </span>
+            <strong id="red-score">1</strong>
+            <small>颗泡泡</small>
+          </div>
+        </div>
+        <div class="battle-turn">
+          <span class="eyebrow" id="move-number">
+            TURN 01
+          </span>
+          <h2 id="turn-title">轮到红方</h2>
+          <p id="turn-hint">点击有红方泡泡的格子</p>
+        </div>
+        <div class="player-score player-blue" id="blue-player">
+          <span class="player-symbol" aria-hidden="true">
+            ◆
+          </span>
+          <div>
+            <span class="player-name">
+              蓝方{' '}
+              <span id="blue-current" hidden>
+                当前回合
+              </span>
+            </span>
+            <strong id="blue-score">1</strong>
+            <small>颗泡泡</small>
+          </div>
+        </div>
+      </div>
+      <div class="board-scroll" aria-label="棋盘可横向滚动">
+        <div
+          class="battle-board"
+          id="battle-board"
+          role="group"
+          aria-label="10 列 5 行棋盘，使用方向键移动，回车或空格落子"
+          aria-busy="false"
+        >
+          {initial.board.map((cell, index) => (
+            <button
+              class="battle-cell"
+              type="button"
+              data-index={index}
+              data-owner={cell.owner ?? 'empty'}
+              data-count={cell.count}
+              tabindex={index === 0 ? 0 : -1}
+              aria-disabled={cell.owner !== 'red' ? 'true' : 'false'}
+              aria-label={`第 ${Math.floor(index / 10) + 1} 行，第 ${(index % 10) + 1} 列，${cell.owner === 'red' ? '红方，1 个泡泡，可落子' : cell.owner === 'blue' ? '蓝方，1 个泡泡' : '空格'}`}
+            >
+              <span class="cell-bubbles" aria-hidden="true">
+                {cell.count > 0 && <i class="cell-bubble"></i>}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div class="battle-bottom">
+        <span>
+          <kbd>↑ ↓ ← →</kbd> 移动 <kbd>Enter</kbd> 落子
+        </span>
+        <span class="board-mobile-hint">左右滑动可查看完整棋盘</span>
+        <span>
+          集满 <b>4</b> 颗，向相邻格爆开 <Icon name="plus" size={13} />
+        </span>
+      </div>
+    </div>
+    <p
+      id="battle-message"
+      class="battle-message"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      红方先手。选择左上角的红色泡泡开始吧。
+    </p>
+    <div id="battle-victory" class="battle-victory" hidden>
+      <span class="eyebrow">ALL BUBBLES, ONE COLOR.</span>
+      <h2 id="winner-title"></h2>
+      <p id="winner-summary"></p>
+      <button class="button" id="play-again" type="button">
+        再来一局 <Icon name="arrow" size={17} />
+      </button>
+    </div>
+    <details class="battle-rules" id="battle-rules">
+      <summary>
+        怎么玩{' '}
+        <span>
+          游戏规则 <Icon name="plus" size={16} />
+        </span>
+      </summary>
+      <div class="battle-rules-content">
+        <ol>
+          <li>棋盘为 10 列 × 5 行。红方从左上角、蓝方从右下角开始，各有 1 个泡泡，红方先手。</li>
+          <li>双方轮流行动。只能选择有己方泡泡的格子，使其中泡泡数量加 1。</li>
+          <li>
+            每格平时容纳 1–3 个同色泡泡。达到 4 个时，该格所有泡泡清空，并向上下左右的相邻格各送出 1
+            个己方泡泡。
+          </li>
+          <li>
+            相邻格如有敌方泡泡，先将它们全部变为己方颜色，再增加 1
+            个泡泡。没有共同边的格子不会受到影响。
+          </li>
+          <li>
+            如果其他格子也达到 4
+            个，继续爆开，直到所有连锁反应结束后才轮到对方。角落和边缘的爆炸阈值同样是
+            4，只向棋盘内传播。
+          </li>
+          <li>棋盘上只剩一种颜色时，该颜色的一方获胜。</li>
+        </ol>
+        <p>同一台设备上的双人对战。泡泡的形状也用于区分阵营：红方为圆形，蓝方为菱形。</p>
+      </div>
+    </details>
+  </section>
+</Layout>
+<script>
+  import { createGame, countBubbles, playMove } from '../../lib/bubble-game.mjs';
+  import type { Cell, Player } from '../../lib/bubble-game.mjs';
+
+  const arena = document.querySelector<HTMLElement>('#battle-arena')!;
+  const board = document.querySelector<HTMLElement>('#battle-board')!;
+  const cells = [...board.querySelectorAll<HTMLButtonElement>('.battle-cell')];
+  const message = document.querySelector<HTMLElement>('#battle-message')!;
+  const title = document.querySelector<HTMLElement>('#turn-title')!;
+  const hint = document.querySelector<HTMLElement>('#turn-hint')!;
+  const victory = document.querySelector<HTMLElement>('#battle-victory')!;
+  const names = { red: '红方', blue: '蓝方' };
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let game = createGame();
+  let busy = false;
+  let version = 0;
+  let focusIndex = 0;
+
+  function render(position: Cell[], burst: number[] = [], affected: number[] = []) {
+    const totals = countBubbles(position);
+    document.querySelector('#red-score')!.textContent = String(totals.red);
+    document.querySelector('#blue-score')!.textContent = String(totals.blue);
+    board.setAttribute('aria-busy', String(busy));
+    for (const [index, button] of cells.entries()) {
+      const cell = position[index];
+      const legal = !busy && !game.winner && cell.owner === game.turn;
+      button.dataset.owner = cell.owner ?? 'empty';
+      button.dataset.count = String(Math.min(cell.count, 4));
+      button.setAttribute('aria-disabled', String(!legal));
+      button.setAttribute(
+        'aria-label',
+        `第 ${Math.floor(index / game.columns) + 1} 行，第 ${(index % game.columns) + 1} 列，${cell.owner ? `${names[cell.owner]}，${cell.count} 个泡泡` : '空格'}${legal ? '，可落子' : ''}`,
+      );
+      button.classList.toggle('is-burst', burst.includes(index));
+      button.classList.toggle('is-affected', affected.includes(index));
+      const bubbles = button.querySelector('.cell-bubbles')!;
+      bubbles.replaceChildren(
+        ...Array.from({ length: Math.min(cell.count, 4) }, () => {
+          const bubble = document.createElement('i');
+          bubble.className = 'cell-bubble';
+          return bubble;
+        }),
+      );
+    }
+  }
+
+  function updateTurn() {
+    arena.dataset.turn = game.turn;
+    document.querySelector('#move-number')!.textContent =
+      `TURN ${String(game.moves + (game.winner ? 0 : 1)).padStart(2, '0')}`;
+    for (const player of ['red', 'blue'] as Player[]) {
+      document.querySelector<HTMLElement>(`#${player}-current`)!.hidden =
+        Boolean(game.winner) || game.turn !== player;
+    }
+    title.textContent = game.winner ? `${names[game.winner]}获胜！` : `轮到${names[game.turn]}`;
+    hint.textContent = game.winner
+      ? '棋盘上的泡泡已归于同一方'
+      : `点击有${names[game.turn]}泡泡的格子`;
+  }
+
+  function restart() {
+    version += 1;
+    busy = false;
+    game = createGame();
+    victory.hidden = true;
+    message.classList.remove('is-error');
+    message.textContent = '红方先手。选择左上角的红色泡泡开始吧。';
+    cells[focusIndex].tabIndex = -1;
+    focusIndex = 0;
+    cells[0].tabIndex = 0;
+    render(game.board);
+    updateTurn();
+  }
+
+  async function move(index: number) {
+    if (busy || game.winner) return;
+    let result;
+    try {
+      result = playMove(game, index);
+    } catch (error) {
+      message.classList.add('is-error');
+      message.textContent = error instanceof Error ? error.message : '请选择有己方泡泡的格子。';
+      return;
+    }
+    const token = ++version;
+    busy = true;
+    message.classList.remove('is-error');
+    const movingPlayer = game.turn;
+    if (result.explosions > 0 && !reducedMotion.matches) {
+      title.textContent = '连锁反应中';
+      hint.textContent = '泡泡正在传播，请稍候…';
+      message.textContent = `${names[movingPlayer]}触发了爆炸，连锁反应结束后交换回合。`;
+      // Group long chains to keep animation under about two seconds.
+      const stride = Math.max(1, Math.ceil(result.frames.length / 16));
+      for (let offset = 0; offset < result.frames.length; offset += stride) {
+        const batch = result.frames.slice(offset, offset + stride);
+        render(
+          batch[batch.length - 1].board,
+          batch.flatMap((frame) => frame.burst),
+          batch.flatMap((frame) => frame.affected),
+        );
+        await new Promise((resolve) => setTimeout(resolve, 110));
+        if (version !== token) return;
+      }
+    }
+    game = result.game;
+    busy = false;
+    render(game.board);
+    updateTurn();
+    if (game.winner) {
+      victory.hidden = false;
+      victory.dataset.winner = game.winner;
+      document.querySelector('#winner-title')!.textContent = `${names[game.winner]}，占领全场！`;
+      document.querySelector('#winner-summary')!.textContent =
+        `经过 ${game.moves} 次落子，棋盘上只剩下${names[game.winner]}的泡泡。`;
+      message.textContent = `${names[game.winner]}获胜！本局共 ${game.moves} 次落子。`;
+    } else {
+      message.textContent = result.explosions
+        ? `${names[movingPlayer]}引发 ${result.explosions} 次爆炸。现在轮到${names[game.turn]}。`
+        : `落子成功。现在轮到${names[game.turn]}。`;
+    }
+  }
+
+  board.addEventListener('click', (event) => {
+    const button =
+      event.target instanceof Element
+        ? event.target.closest<HTMLButtonElement>('.battle-cell')
+        : null;
+    if (!button) return;
+    const index = Number(button.dataset.index);
+    cells[focusIndex].tabIndex = -1;
+    focusIndex = index;
+    button.tabIndex = 0;
+    void move(index);
+  });
+  board.addEventListener('keydown', (event) => {
+    const directions: Record<string, number> = {
+      ArrowUp: -game.columns,
+      ArrowDown: game.columns,
+      ArrowLeft: -1,
+      ArrowRight: 1,
+    };
+    if (!(event.key in directions)) return;
+    event.preventDefault();
+    const x = focusIndex % game.columns;
+    if (
+      (event.key === 'ArrowLeft' && x === 0) ||
+      (event.key === 'ArrowRight' && x === game.columns - 1)
+    )
+      return;
+    const next = focusIndex + directions[event.key];
+    if (next < 0 || next >= cells.length) return;
+    cells[focusIndex].tabIndex = -1;
+    focusIndex = next;
+    cells[next].tabIndex = 0;
+    cells[next].focus({ preventScroll: true });
+    cells[next].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  });
+  document.querySelector('#restart-game')!.addEventListener('click', restart);
+  document.querySelector('#play-again')!.addEventListener('click', () => {
+    restart();
+    cells[0].focus();
+  });
+</script>

@@ -1,0 +1,223 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeading from '../../components/PageHeading.astro';
+import Icon from '../../components/Icon.astro';
+const options = [
+  ['upper', '大写字母', 'A–Z'],
+  ['lower', '小写字母', 'a–z'],
+  ['numbers', '数字', '0–9'],
+  ['symbols', '其他符号', '#@!'],
+];
+---
+
+<Layout title="密码生成" active="playground">
+  <PageHeading
+    title="密码生成"
+    english="STRING GENERATOR / 01"
+    parent="广场"
+    description="按你的规则，生成需要的字符串。"
+  />
+  <section class="wrap page-content">
+    <noscript>
+      <p class="noscript-note">请启用 JavaScript 以使用密码生成器。</p>
+    </noscript>
+    <div class="tool-layout">
+      <form id="generator-form" class="tool-settings" novalidate>
+        <fieldset>
+          <legend>字符范围</legend>
+          <div class="option-grid">
+            {options.map(([value, label, example]) => (
+              <label class="check-option">
+                <input
+                  type="checkbox"
+                  name="groups"
+                  value={value}
+                  checked={['upper', 'lower'].includes(value)}
+                />
+                <span>
+                  {label} <span class="muted">{example}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>首字符范围</legend>
+          <div class="option-grid">
+            {options.map(([value, label]) => (
+              <label class="check-option">
+                <input
+                  type="checkbox"
+                  name="firstGroups"
+                  value={value}
+                  checked={['upper', 'lower'].includes(value)}
+                  disabled={!['upper', 'lower'].includes(value)}
+                />
+                <span>{label}</span>
+              </label>
+            ))}
+          </div>
+          <p class="form-hint">首字符范围需包含在上方选择的字符范围内。</p>
+        </fieldset>
+        <fieldset>
+          <legend>生成方式</legend>
+          <div class="mode-options">
+            <label class="radio-option">
+              <input type="radio" name="mode" value="fixed" checked />
+              固定长度
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="mode" value="random" />
+              随机长度
+            </label>
+          </div>
+          <div id="fixed-fields">
+            <label class="number-label" for="length">
+              长度（1–30）
+              <input
+                id="length"
+                name="length"
+                type="number"
+                min="1"
+                max="30"
+                step="1"
+                value="1"
+                required
+              />
+            </label>
+          </div>
+          <div id="random-fields" class="input-row" hidden>
+            <label class="number-label" for="min">
+              最小长度（1–30）
+              <input
+                id="min"
+                name="min"
+                type="number"
+                min="1"
+                max="30"
+                step="1"
+                value="1"
+                disabled
+                required
+              />
+            </label>
+            <label class="number-label" for="max">
+              最大长度（1–30）
+              <input
+                id="max"
+                name="max"
+                type="number"
+                min="1"
+                max="30"
+                step="1"
+                value="1"
+                disabled
+                required
+              />
+            </label>
+          </div>
+        </fieldset>
+        <label class="number-label amount-row" for="amount">
+          一次生成数量（1–50）
+          <input
+            id="amount"
+            name="amount"
+            type="number"
+            min="1"
+            max="50"
+            step="1"
+            value="1"
+            required
+          />
+        </label>
+        <button class="button" type="submit">
+          生成 <Icon name="plus" size={18} />
+        </button>
+        <p id="form-message" class="tool-message" role="status" aria-live="polite"></p>
+      </form>
+      <section class="tool-output" aria-labelledby="output-title">
+        <div class="output-heading">
+          <h2 id="output-title">
+            <label for="result">生成结果</label>
+          </h2>
+          <button type="button" id="copy" class="copy-button" disabled>
+            复制内容 <Icon size={13} />
+          </button>
+        </div>
+        <textarea
+          id="result"
+          readonly
+          spellcheck="false"
+          placeholder="生成的字符串会显示在这里"
+          aria-describedby="output-note"
+        ></textarea>
+        <p id="output-note" class="output-note">
+          所有生成操作均在你的浏览器中完成。
+        </p>
+        <p id="copy-message" class="tool-message" role="status" aria-live="polite"></p>
+      </section>
+    </div>
+  </section>
+</Layout>
+<script>
+  import { generateStrings } from '../../lib/generator.mjs';
+  const form = document.querySelector<HTMLFormElement>('#generator-form')!;
+  const result = document.querySelector<HTMLTextAreaElement>('#result')!;
+  const message = document.querySelector<HTMLElement>('#form-message')!;
+  const copyMessage = document.querySelector<HTMLElement>('#copy-message')!;
+  const copy = document.querySelector<HTMLButtonElement>('#copy')!;
+  const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement;
+  const checks = (name: string) =>
+    [...form.querySelectorAll<HTMLInputElement>(`input[name="${name}"]:checked`)].map(
+      (input) => input.value,
+    );
+  form.addEventListener('change', () => {
+    for (const input of form.querySelectorAll<HTMLInputElement>('input[name="groups"]')) {
+      const first = form.querySelector<HTMLInputElement>(
+        `input[name="firstGroups"][value="${input.value}"]`,
+      )!;
+      first.disabled = !input.checked;
+      if (first.disabled) first.checked = false;
+    }
+    const random = checks('mode')[0] === 'random';
+    document.querySelector<HTMLElement>('#fixed-fields')!.hidden = random;
+    document.querySelector<HTMLElement>('#random-fields')!.hidden = !random;
+    field('length').disabled = random;
+    field('min').disabled = field('max').disabled = !random;
+  });
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    message.textContent = '';
+    message.classList.remove('error');
+    copyMessage.textContent = '';
+    try {
+      result.value = generateStrings({
+        groups: checks('groups'),
+        firstGroups: checks('firstGroups'),
+        mode: checks('mode')[0],
+        length: Number(field('length').value),
+        min: Number(field('min').value),
+        max: Number(field('max').value),
+        amount: Number(field('amount').value),
+      }).join('\n');
+      copy.disabled = false;
+      message.textContent = `已生成 ${field('amount').value} 条字符串。`;
+    } catch (error) {
+      result.value = '';
+      copy.disabled = true;
+      message.textContent = error instanceof Error ? error.message : '生成失败，请检查输入。';
+      message.classList.add('error');
+    }
+  });
+  copy.addEventListener('click', async () => {
+    if (!result.value) return;
+    try {
+      await navigator.clipboard.writeText(result.value);
+      copyMessage.textContent = '已复制到剪贴板。';
+    } catch {
+      result.focus();
+      result.select();
+      copyMessage.textContent = '内容已选中，请按 Ctrl+C 或 ⌘C 复制。';
+    }
+  });
+</script>

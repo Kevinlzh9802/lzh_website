@@ -1,0 +1,34 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeading from '../../components/PageHeading.astro';
+import Icon from '../../components/Icon.astro';
+import { site, contactGroups } from '../../data/site';
+---
+
+<Layout title="联系方式" active="profile">
+  <PageHeading title="联系方式" english="LET’S CONNECT" description="很高兴能在这里与你相遇。" />
+  <section class="wrap page-content">
+    <a class="contact-banner" href={`mailto:${site.email}`}>
+      <div>
+        <span class="eyebrow">EMAIL · 个人邮件</span>
+        <h2>{site.email}</h2>
+      </div>
+      <Icon name="mail" size={36} />
+    </a>
+    <div class="contact-grid">
+      {contactGroups.map((group) => (
+        <section class="contact-group">
+          <h2>{group.title}</h2>
+          <dl>
+            {group.items.map(([label, value]) => (
+              <div>
+                <dt>{label}</dt>
+                <dd>{value === site.email ? <a href={`mailto:${value}`}>{value}</a> : value}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ))}
+    </div>
+  </section>
+</Layout>

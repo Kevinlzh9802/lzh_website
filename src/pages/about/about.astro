@@ -1,0 +1,38 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeading from '../../components/PageHeading.astro';
+import Icon from '../../components/Icon.astro';
+---
+
+<Layout title="关于本站" active="about">
+  <PageHeading title="关于本站" english="ABOUT THIS SITE" description="一个持续生长的个人空间。" />
+  <section class="wrap page-content about-content">
+    <div class="about-intro">
+      <span class="eyebrow">COLOPHON</span>
+      <h2>从一个小站开始。</h2>
+      <p>本网站搭建时使用了以下资源，在此一并表示感谢。</p>
+    </div>
+    <div class="resource-list">
+      <a href="https://astro.build/" class="resource">
+        <span class="resource-mark astro-mark" aria-hidden="true">
+          A
+        </span>
+        <div>
+          <h3>Astro</h3>
+          <p>本站现用的网站框架</p>
+        </div>
+        <Icon />
+      </a>
+      <a href="https://getbootstrap.com/" class="resource">
+        <span class="resource-mark bootstrap-mark" aria-hidden="true">
+          B
+        </span>
+        <div>
+          <h3>Bootstrap</h3>
+          <p>本站最初使用的前端框架，保留致谢</p>
+        </div>
+        <Icon />
+      </a>
+    </div>
+  </section>
+</Layout>

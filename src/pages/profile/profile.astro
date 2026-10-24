@@ -1,0 +1,28 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeading from '../../components/PageHeading.astro';
+import Icon from '../../components/Icon.astro';
+import { links } from '../../data/site';
+---
+
+<Layout title="个人信息" active="profile">
+  <PageHeading title="个人信息" english="ABOUT ME" description="Zonghuan Li 的个人空间。" />
+  <div class="wrap page-content">
+    <div class="profile-sections">
+      <section id="experience">
+        <span class="eyebrow">01 / EXPERIENCE</span>
+        <h2>个人经历</h2>
+        <p class="muted">内容正在整理中。</p>
+      </section>
+      <section id="interests">
+        <span class="eyebrow">02 / INTERESTS</span>
+        <h2>兴趣爱好</h2>
+        <p class="muted">内容正在整理中。</p>
+      </section>
+    </div>
+    <a class="inline-callout" href={links.contact}>
+      <span>想联系我？查看联系方式。</span>
+      <Icon />
+    </a>
+  </div>
+</Layout>

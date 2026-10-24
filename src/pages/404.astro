@@ -1,0 +1,16 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { links } from '../data/site';
+---
+
+<Layout title="页面未找到">
+  <section class="wrap page-content empty-state" id="top">
+    <span class="eyebrow">404 / PAGE NOT FOUND</span>
+    <h1>这一页走丢了。</h1>
+    <p>File not found (404 error)</p>
+    <p>If you think what you're looking for should be here, please contact the site owner.</p>
+    <a class="button" href={links.home}>
+      返回首页 ↗
+    </a>
+  </section>
+</Layout>
